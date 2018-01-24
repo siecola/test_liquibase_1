@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS testliquibase.DATABASECHANGELOG (
     LABELS VARCHAR(255) NULL
 );
 
+
 DELIMITER //
 CREATE PROCEDURE initializeDatabaseLockTable()
     BEGIN
@@ -39,6 +40,7 @@ CREATE PROCEDURE initializeDatabaseLockTable()
     END;
 //
 DELIMITER //
+
 
 DELIMITER //
 CREATE PROCEDURE lockDatabaseLockTable()
