@@ -45,7 +45,8 @@ DELIMITER //
 DELIMITER //
 CREATE PROCEDURE lockDatabaseLockTable()
     BEGIN
-        UPDATE testliquibase.DATABASECHANGELOGLOCK SET LOCKED = 1, LOCKEDBY = 'aom', LOCKGRANTED = NOW() WHERE ID = 1 AND LOCKED = 0;
+        UPDATE testliquibase.DATABASECHANGELOGLOCK SET LOCKED = 1, LOCKEDBY = 'aom', LOCKGRANTED = NOW()
+            WHERE ID = 1 AND LOCKED = 0;
     END;
 //
 DELIMITER //
@@ -70,10 +71,14 @@ DELIMITER //
 
 
 DELIMITER //
-CREATE PROCEDURE saveMigrationLog(IN migrationId VARCHAR(255), IN filename VARCHAR(255), IN md5sum VARCHAR(255), IN description VARCHAR(255), IN comments VARCHAR(255))
+CREATE PROCEDURE saveMigrationLog(IN migrationId VARCHAR(255), IN filename VARCHAR(255), IN md5sum VARCHAR(255),
+        IN description VARCHAR(255), IN comments VARCHAR(255))
+
     BEGIN
-        INSERT INTO testliquibase.DATABASECHANGELOG (ID, AUTHOR, FILENAME, DATEEXECUTED, ORDEREXECUTED, MD5SUM, DESCRIPTION, COMMENTS, EXECTYPE, CONTEXTS, LABELS, LIQUIBASE)
-    VALUES (migrationId, 'aom', filename, NOW(), 1, md5sum, description, comments, 'EXECUTED', NULL, NULL, '3.4.2');
+        INSERT INTO testliquibase.DATABASECHANGELOG (ID, AUTHOR, FILENAME, DATEEXECUTED, ORDEREXECUTED, MD5SUM,
+            DESCRIPTION, COMMENTS, EXECTYPE, CONTEXTS, LABELS, LIQUIBASE)
+            VALUES (migrationId, 'aom', filename, NOW(), 1, md5sum, description, comments, 'EXECUTED', NULL,
+            NULL, '3.4.2');
     END;
 //
 DELIMITER //

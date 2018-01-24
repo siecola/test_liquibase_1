@@ -1,6 +1,5 @@
 USE testliquibase
-DROP PROCEDURE IF EXISTS createUserTable;
-DROP PROCEDURE IF EXISTS addColorInProduct;
+DROP PROCEDURE IF EXISTS performProductTableMigration;
 
 CALL initializeDatabaseLockTable;
 
@@ -13,52 +12,42 @@ CREATE TABLE IF NOT EXISTS testliquibase.product (
     CONSTRAINT PK_PRODUCT PRIMARY KEY (id)
 );
 
+
 DELIMITER //
-CREATE PROCEDURE createUserTable()
+CREATE PROCEDURE performProductTableMigration(IN migrationId VARCHAR(255), IN filename VARCHAR(255), IN md5sum VARCHAR(255),
+    IN description VARCHAR(255), IN comments VARCHAR(255))
+
     BEGIN
-        SET @migrationId = '1516704417378-2';
         SET @migrationExists = 0;
-        CALL checkIfMigrationExists(@migrationId, @migrationExists);
+        CALL checkIfMigrationExists(migrationId, @migrationExists);
 
         IF @migrationExists = 0 THEN
             CALL lockDatabaseLockTable();
 
-            CREATE TABLE IF NOT EXISTS testliquibase.user (
-                id BIGINT AUTO_INCREMENT NOT NULL,
-                name VARCHAR(30) NOT NULL,
-                CONSTRAINT PK_PRODUCT PRIMARY KEY (id)
-            );
+            --  Changeset src/main/db/changelog.xml::1516704417378-2::paulo.cesar (generated)
+            IF migrationId = '1516704417378-2' THEN
+                CREATE TABLE IF NOT EXISTS testliquibase.user (
+                    id BIGINT AUTO_INCREMENT NOT NULL,
+                    name VARCHAR(30) NOT NULL,
+                    CONSTRAINT PK_PRODUCT PRIMARY KEY (id)
+                );
+
+            --  Changeset src/main/db/changelog.xml::1516704417378-3::paulo.cesar (generated)
+            ELSEIF migrationId = '1516704417378-3' THEN
+                ALTER TABLE testliquibase.product ADD COLUMN color VARCHAR(255) NOT NULL;
+                ALTER TABLE testliquibase.product ADD CONSTRAINT UKl7f5cbhq679s0w0g3ig7p1a7a UNIQUE (model);
+
+            END IF;
 
             CALL releaseDatabaseLockTable();
 
-            CALL saveMigrationLog(@migrationId, 'src/main/db/changelog.xml', '12345', 'createUserTable', 'Matilde');
+            CALL saveMigrationLog(migrationId, filename, md5sum, description, comments);
         END IF;
     END;
 //
 DELIMITER //
 
-
-DELIMITER //
-CREATE PROCEDURE addColorInProduct()
-    BEGIN
-        SET @migrationId = '1516704417378-3';
-        SET @migrationExists = 0;
-        CALL checkIfMigrationExists(@migrationId, @migrationExists);
-
-        IF @migrationExists = 0 THEN
-            CALL lockDatabaseLockTable();
-
-            ALTER TABLE testliquibase.product ADD COLUMN color VARCHAR(255) NOT NULL;
-            ALTER TABLE testliquibase.product ADD CONSTRAINT UKl7f5cbhq679s0w0g3ig7p1a7a UNIQUE (model);
-
-            CALL releaseDatabaseLockTable();
-
-            CALL saveMigrationLog(@migrationId, 'src/main/db/changelog.xml', '12345', 'createUserTable', 'Matilde');
-        END IF;
-    END;
-//
-DELIMITER //
-
-
-CALL createUserTable();
-CALL addColorInProduct();
+call performProductTableMigration('1516704417378-2', 'src/main/db/changelog.xml', '12345', 'createUserTable',
+    'Matilde');
+call performProductTableMigration('1516704417378-3', 'src/main/db/changelog.xml', '12345', 'addColorInProduct',
+    'Matilde');
