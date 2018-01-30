@@ -20,7 +20,7 @@ buildscript {
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-
+		classpath "org.mariadb.jdbc:mariadb-java-client-jre7:1.6.1"
 		classpath "org.liquibase:liquibase-gradle-plugin:1.2.4"
 	}
 }
