@@ -40,6 +40,12 @@ dependencies {
 
 
 
+Finally, apply the `liquibase` plugin:
+
+```
+apply plugin: 'liquibase'
+```
+
 # Configure the Liquibase properties:
 
 To avoid the Liquibase task execution during the application startup, open the `application.properties` file and add the following configuration on it:
